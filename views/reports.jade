@@ -1,0 +1,164 @@
+extends layout
+block styles
+block scripts
+	script(src='/static/javascripts/jquery-ias.min.js')
+	script.
+		(function(){
+			//- $('nav#sidebar').mmenu({
+			//- 	extensions	: [ 'effect-slide-menu', 'pageshadow', 'widescreen' ],
+			//- 	searchfield	: true,
+			//- 	counters	: true,
+			//- 	navbar 		: {
+			//- 		title		: 'Advanced menu'
+			//- 	},
+			//- 	navbars		: [
+			//- 		{
+			//- 			position	: 'top',
+			//- 			content		: [ 'searchfield' ]
+			//- 		}, {
+			//- 			position	: 'top',
+			//- 			content		: [
+			//- 				'prev',
+			//- 				'title',
+			//- 				'close'
+			//- 			]
+			//- 		}, {
+			//- 			position	: 'bottom',
+			//- 			content		: [
+			//- 				'<a href="http://mmenu.frebsite.nl/wordpress-plugin.html" target="_blank">WordPress plugin</a>'
+			//- 			]
+			//- 		}
+			//- 	]
+			//- });
+			//- var api = 	$('nav#sidebar').data( "mmenu" );
+			//- api.close()
+			//- console.log(api)
+		// 	$('.card-columns').jscroll({
+		// 			debug:true,
+		// 	    loadingHtml: '<span>loading</span>',
+		// 	    padding: 20,
+		// 	    nextSelector: 'a.next',
+		// 	    contentSelector: 'div.card'
+		// 	});
+		//
+			var ias = jQuery.ias({
+			  container:  '.card-columns',
+			  item:       '.card',
+			  pagination: '.pagination',
+			  next:       '.next'
+			});
+			ias.extension(new IASTriggerExtension({
+		    // text: 'Load more items', // optionally
+		}));
+			ias.extension(new IASSpinnerExtension({
+		    // src: '<image source>', // optionally
+		}));
+		ias.extension(new IASNoneLeftExtension({text: "You reached the end"}));
+		})();
+
+block content
+	ol.breadcrumb.bg-white.m-t-1
+			li.breadcrumb-item
+				a(href='/') Home
+			li.breadcrumb-item
+				a(href='/reports') 鱼类报告
+			if marine||country
+				li.breadcrumb-item 
+				| #{marine}
+				if marine&&country
+					|  @ 
+				| #{country}
+	.text-xs-center.m-t-1.m-b-3
+		h1.page-title.m-b-1 #{marine?marine:'鱼类报告'}
+		p #{marineObj&&marineObj.content?marineObj.content:'通过照片记录每一次海洋生物的发现， 潜水时光希望建立一个民间的海洋生物日志。'}
+	nav#nav-marine.nav.nav-inline.nav-filter
+		//- .navbar.navbar-fixed-bottom 
+		a.nav-link.active(href=makeUrl({cat:undefined}), class={'text-warning': !marine}) 全部
+		each m in marines
+			a.nav-link(href= makeUrl({cat:m['marineCat_zh']}) class={'text-warning': (m['marineCat_zh']==marine)})= m['marineCat_zh']
+	nav#nav-country.nav.nav-inline.nav-filter
+		//- .navbar.navbar-fixed-bottom 
+		a.nav-link.active(href=makeUrl({country:undefined}), class={'text-warning': !country} ) 全部
+		each c in countries
+			a.nav-link.active(href=makeUrl({country:c['country_zh']}), class={'text-warning': (c['country_zh']==country)})= c['country_zh']
+	//- h2= nextPage
+	//- h2= currentPage
+	//- div
+		each report in reports
+			div.card
+				img.card-img-top(src=report.get('thumb'))
+				.card-block
+					h4.card-title= report.get('title')
+	div#reports-container.card-columns.m-t-3
+		each report in reports
+			div.card
+				//- img.card-img-top(src=report.get('thumb'))
+				img.card-img-top(src= report.thumb)
+				.card-block
+					a(href= "/reports/"+report.objectId)
+						span= report['title']
+						span= report['country_zh']
+						span= report['region_zh']
+						span= report['divesite']
+						span= report['marineCat_zh']
+					//- h4.card-title= report.get('title')
+					//- h4.card-title= report['title']
+
+					
+	nav(aria-label='Page navigation')
+		ul.pagination.pagination-sm
+			li.page-item
+				a.page-link(href='index0.html', aria-label='Previous')
+					span(aria-hidden='true') &laquo;
+					| &#x9;&#x9;        
+					span.sr-only Previous
+				if nextPage
+					a.page-link.next(href=nextPage, aria-label='Next')
+						span(aria-hidden='true') &raquo;
+						| &#x9;&#x9;        
+						span.sr-only Next			
+					
+	//- #createTodo
+		form(action='/todos', method='POST')
+			.form-group
+				input.form-control(type='input', name='content')
+				input.btn.btn-default(type='submit', value='新增')
+
+	//- h2 TODO 列表
+	//- div
+		a.btn.btn-default(href='/todos', role='button') 未完成
+		a.btn.btn-default(href='/todos?status=1', role='button') 已完成
+
+	//- #errMsg
+		if errMsg
+			pre= errMsg
+	
+
+	//- div
+		table.table
+			thead
+				colgroup
+					col.col-xs-10
+					col.col-xs-1
+					col.col-xs-1
+				tr
+					th 描述
+					th 标签
+					th 所有者
+					th 操作
+			each todo in todos
+				tr
+					td= todo.get('title')
+					td
+						img(src=todo.get('thumb'))
+					//- td
+						form(action='/todos/#{todo.id}/#{status == 0 ? "done" : "undone" }', method='POST')
+							.checkbox
+								label
+									input(type='checkbox', checked=(todo.get('status') == 1), onClick='submit()')
+									| #{todo.get('content')}
+					td= todo.get('tags') == null ? '' : todo.get('tags').join(',')
+					td= todo.get('author') == null ? '' : todo.get('author').get('username')
+					td
+						form(action='/todos/#{todo.id}?_method=DELETE&status=#{status}', method='POST')
+							input.btn.btn-default(type='submit', value='删除')

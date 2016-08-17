@@ -1,0 +1,64 @@
+doctype html
+html
+	head
+		title= title
+		meta(name='viewport', content='width=device-width, initial-scale=1')
+		//- script(src='/static/javascripts/jquery-2.1.1.min.js')
+		//- script(src='/static/javascripts/bootstrap.min.js')
+		link(rel='stylesheet', href='https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-alpha.3/css/bootstrap.min.css')
+		link(rel='stylesheet', href='/static/stylesheets/style.css')
+		block styles
+		
+		//- link(rel='stylesheet', href='/static/stylesheets/bootstrap.min.css')
+		//- <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-alpha.3/css/bootstrap.min.css" integrity="sha384-MIwDKRSSImVFAZCVLtU0LMDdON6KVCrZHyVQQj6e8wIEJkW4tvwqXrbMIya1vriY" crossorigin="anonymous">
+			//- <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-alpha.3/js/bootstrap.min.js" integrity="sha384-ux8v3A6CPtOTqOzMKiuo3d/DomGaaClxFYdCu2HPMBEkf6x2xiDyJ7gkXU0MWwaD" crossorigin="anonymous"></script>
+	body
+			//- .container-fluid
+			.container
+				nav.navbar.navbar-fixed-top.bg-white.navbar-tall.p-t-1.p-b-1.topbar(role='navigation')
+					//- button.navbar-toggler.pull-xs-left
+						a(type='button', href="#sidebar")
+							| &#x2630;
+					button.navbar-toggler.hidden-sm-up.pull-xs-right(type='button', data-toggle='collapse', data-target='#exCollapsingNavbar2', aria-controls='exCollapsingNavbar2', aria-expanded='false', aria-label='Toggle navigation')
+						| &#x2630;
+					a.navbar-brand.pull-xs-none.pull-sm-left.text-xs-center(href='／') 潜水时光
+					
+					#exCollapsingNavbar2.collapse.navbar-toggleable-xs
+						ul.nav.navbar-nav.pull-xs-right
+							li.nav-item
+								a.nav-link(href='/reports') Reports
+							li.nav-item
+								a.nav-link(href='#') About
+						//- nav.navbar.navbar-light.navbar-fixed-top.bg-faded(role='navigation')
+							button.navbar-toggler.hidden-sm-up(type="button", data-toggle="collapse", data-target="#exCollapsingNavbar2", aria-controls="exCollapsingNavbar2", aria-expanded="false", aria-label="Toggle navigation")
+								&#9776;
+							div.collapse.navbar-toggleable-xs#exCollapsingNavbar2
+								a.navbar-brand(href='/todos') 云代码 Demo
+								//- #bs-example-navbar-collapse-1(class='collapse navbar-collapse')
+								ul.nav.navbar-nav
+									li.nav-item 
+										a.nav-link(href="/todos") TODO 列表
+										//- ul.nav.navbar-nav.navbar-right
+									if user
+										li.nav-item: a.nav-link(href="#") #{user.get('username')}
+										li.nav-item: a.nav-link(href="/users/logout") 登出
+									else
+										li.nav-item: a.nav-link(href="/users/login") 登录
+										li.nav-item: a.nav-link(href="/users/register") 注册
+				.container.p-t-1.m-t-3
+					block content
+			footer.blog-footer.bg-faded.text-xs-center.m-t-3.p-a-2
+					p
+						| copyright@lazydiving 2016-2017
+					p
+						a(href='#') Back to top
+			script(src = "https://ajax.googleapis.com/ajax/libs/jquery/3.0.0/jquery.min.js")
+			script(src = 'https://cdnjs.cloudflare.com/ajax/libs/tether/1.2.0/js/tether.min.js')
+			script(src = 'https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-alpha.3/js/bootstrap.min.js')
+
+			//- script(src='/static/javascripts/reports.js')
+			block scripts
+
+			
+		
+		

@@ -1,0 +1,52 @@
+extends layout
+block styles
+block scripts
+	script.
+		(function(){
+				})();
+block content
+	ol.breadcrumb.bg-white.m-t-1
+			li.breadcrumb-item
+				a(href='/') Home
+			li.breadcrumb-item
+				a(href='/reports') 鱼类报告
+			//- li.breadcrumb-item= report.title 
+
+	.text-xs-center.m-t-1.m-b-1
+		h1.page-title.m-b-1=report.title
+		nav.nav.nav-inline.nav-filter
+			//- .navbar.navbar-fixed-bottom 
+			a.nav-link.active(href="/reports?country="+report.country_zh)= report['country_zh']
+			a.nav-link.active(href="/reports?country="+report.country_zh)= report['region_zh']
+			a.nav-link.active(href="#")= report['divesite']
+			a.nav-link.active(href="/reports?cat="+report.marineCat_zh)= report['marineCat_zh']
+			if report.scientificName
+				a.nav-link.active(href="#")	#{report.scientificName + (report.marineAuthor?"\("+report.marineAuthor+"\)":"")}
+			p= report.time
+
+		//- a.nav-link.active(href=makeUrl({cat:undefined}), class={'text-warning': !marine}) 全部
+		//- each m in marines
+		//- 	a.nav-link(href= makeUrl({cat:m['marineCat_zh']}) class={'text-warning': (m['marineCat_zh']==marine)})= m['marineCat_zh']
+
+	div.m-t-3
+		
+			img.img-fluid.m-x-auto.d-block(src= report.thumb)
+			div.m-t-3!= report.content
+	nav.nav.m-t-3.nav-inline
+		span.p-r-1 阅读更多:
+		a.nav-link.active(href="/reports?cat="+report.marineCat_zh) 类似海洋生物和鱼类
+		a.nav-link.active(href="/reports?country="+report.country_zh) 同地区海洋生物
+		if report.scientificName
+			a.nav-link(href="http://eol.org/search?q="+report.scientificName) Eol.org 生命百科
+			a.nav-link(href="http://www.gbif.org/species/search?q="+report.scientificName) GBIF
+			
+	nav.nav.m-t-3
+			if prev
+				a.nav-link.nav-prev(href="/reports/"+prev.objectId)="<<"+shortTitle(prev)
+			if next
+				a.nav-link.pull-xs-right.nav-next(href="/reports/"+next.objectId)=shortTitle(next)+">>"
+			//- a.nav-link.pull-xs-right.next(href='#', aria-label='Next')
+					| &#x9;&#x9;        
+					span Next			
+					
+	
