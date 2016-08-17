@@ -46,7 +46,7 @@ app.use('/users', users);
 app.use('/reports', reports);
 
 app.get('/', function(req, res) {
-  res.redirect('/todos');
+  res.redirect('/reports');
 })
 
 // 如果任何路由都没匹配到，则认为 404
